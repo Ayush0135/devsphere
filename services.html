@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Explore Devsphere's premium services: Web Dev, AI, Cybersecurity, Marketing, and Architecture.">
+    <title>Services – Devsphere</title>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header>
+        <h1>Devsphere</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="services.html">Services</a>
+            <a href="testimonials.html">Testimonials</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <section class="hero-animated" style="min-height: 40vh; padding-top: 150px;">
+        <div class="hero-content">
+            <h1 class="title">Our Expertise</h1>
+            <p class="subtitle">Comprehensive digital and physical solutions designed for the future.</p>
+        </div>
+        <div class="hero-bg"></div>
+    </section>
+
+    <section class="section">
+        <div class="services-grid">
+
+            <div class="card">
+                <h4>🌐 Website Development</h4>
+                <p>Custom, modern, fast websites tailored for your brand.</p>
+                <button class="btn learn-more-btn" data-service="Website Development">Learn More</button>
+            </div>
+
+            <div class="card">
+                <h4>📱 Web/Mobile App Development</h4>
+                <p>Cross-platform apps for seamless digital experiences.</p>
+                <button class="btn learn-more-btn" data-service="Web and Mobile App Development">Learn More</button>
+            </div>
+
+            <div class="card">
+                <h4>🤖 Custom Agentic AI</h4>
+                <p>AI systems trained specifically for your workflows.</p>
+                <button class="btn learn-more-btn" data-service="Custom Agentic AI">Learn More</button>
+            </div>
+
+            <div class="card">
+                <h4>📊 Data Analysis</h4>
+                <p>Meaningful insights through advanced data analytics.</p>
+                <button class="btn learn-more-btn" data-service="Data Analysis">Learn More</button>
+            </div>
+
+            <div class="card">
+                <h4>🔒 Cybersecurity</h4>
+                <p>Protecting your digital systems with AI-driven security.</p>
+                <button class="btn learn-more-btn" data-service="Cybersecurity">Learn More</button>
+            </div>
+
+            <div class="card">
+                <h4>📢 Social Media Marketing</h4>
+                <p>Strategic growth and engagement for your brand online.</p>
+                <button class="btn learn-more-btn" data-service="Social Media Marketing">Learn More</button>
+            </div>
+
+            <div class="card">
+                <h4>🏗️ Architecture</h4>
+                <p>Innovative architectural designs blending aesthetics and function.</p>
+                <button class="btn learn-more-btn" data-service="Modern Architecture">Learn More</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div id="serviceModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="modalTitle">Service Details</h2>
+            <div id="modalBody">
+                <div class="loader"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>© 2025 DevSphere. All rights reserved.</footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('serviceModal');
+            const closeBtn = document.querySelector('.close-btn');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const buttons = document.querySelectorAll('.learn-more-btn');
+
+            buttons.forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const serviceName = btn.getAttribute('data-service');
+                    modalTitle.textContent = serviceName;
+                    modalBody.innerHTML = '<p style="text-align:center; color:#888; padding: 40px;">Loading insights...</p>';
+                    modal.style.display = 'flex';
+
+                    try {
+                        const response = await fetch('http://localhost:3000/api/service-details', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ serviceName })
+                        });
+
+                        const data = await response.json();
+
+                        if (data.content) {
+                            modalBody.innerHTML = data.content;
+                        } else if (data.error) {
+                            modalBody.innerHTML = `<p style="color: #ff4444;">${data.error}</p>`;
+                        } else {
+                            modalBody.innerHTML = '<p>Failed to load details. Please try again.</p>';
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        modalBody.innerHTML = '<p>Error connecting to the server. Ensure the backend is running.</p>';
+                    }
+                });
+            });
+
+            closeBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
