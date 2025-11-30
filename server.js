@@ -5,10 +5,11 @@ const Groq = require('groq-sdk');
 const nodemailer = require('nodemailer');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(__dirname));
 
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY
